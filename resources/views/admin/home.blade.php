@@ -46,7 +46,7 @@
                     <p
                         class="text-lg font-semibold text-gray-700 dark:text-gray-200"
                     >
-                        6389
+                        {{count($demandes)}}
                     </p>
                 </div>
             </div>
@@ -107,9 +107,9 @@
                         </td>
                         <td class="px-4 py-3 text-sm">
                             @if($demande->etat=="DEMANDE")
-                                <a href="#">
+                                <a href="{{route('admin.demande.change.etat', array('slug'=>$demande->slug, 'etat'=>'ENVOYE'))}}">
                                 <button class="flex items-center justify-between px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
-                                    <span>Borne envoyée</span>
+                                    <span>ENVOYÉ</span>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
                                 </button>
                                 </a>
@@ -122,13 +122,13 @@
 
 
                                 @if($demande->etat=="ENVOYE")
-                                    <a class="mr-3" href="#">
+                                    <a class="mr-3" href="{{route('admin.demande.change.etat', array('slug'=>$demande->slug, 'etat'=>'TERMINE'))}}">
                                         <button class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-full active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple" aria-label="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
                                         </button>
                                     </a>
                                 @endif
-                                    <a href="#">
+                                    <a href="{{route('admin.demande.show', array('slug'=>$demande->slug))}}">
                                         <button class="flex items-center justify-between px-2 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-full active:bg-purple-600 " aria-label="Edit">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
                                         </button>

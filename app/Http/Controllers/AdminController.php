@@ -23,9 +23,10 @@ class AdminController extends Controller
         $telephone = $request->input('telephone');
         $date = $request->input('date');
         $etat = $request->input('etat');
+
         $slug = uniqid();
 
-        $directoryPath = public_path($slug);
+        $directoryPath = public_path('/images-bornes/'.$slug);
 
         // Check if the directory doesn't already exist
         if (!File::exists($directoryPath)) {
@@ -33,9 +34,12 @@ class AdminController extends Controller
             File::makeDirectory($directoryPath);
         }
 
-        $qrCode = QrCode::size(200)->generate(env('QR_BASE_URL').$slug."/image", '../public/'.$slug.'/code-qr.svg');;
+        $qrCode = QrCode::
+            size(200)
+            ->format('png')
+            ->generate(env('QR_BASE_URL').$slug."/image", '../public/images-bornes/'.$slug.'/code-qr.png');;
 
-        checkStatus($etat);
+        $this->checkStatus($etat);
 
         Demande::create(
            [
@@ -50,10 +54,27 @@ class AdminController extends Controller
         );
 
         return redirect()->route('admin.home');
-
     }
 
-    private function checkStatus(string $statut) : bool
+
+    public function changeEtat(string $slug, string $etat)
+    {
+        $demande = Demande::where('slug', $slug)->first();
+        $demande->etat = $etat;
+        $demande->save();
+
+        $this->checkStatus($etat);
+
+        return redirect()->route('admin.home');
+    }
+
+    public function showDemande(string $slug)
+    {
+        $demande = Demande::where('slug', $slug)->first();
+        return view("admin/show", compact('demande'));
+    }
+
+    public function checkStatus(string $statut)
     {
         if ($statut==''){
             //Envoyer un mail contenant le QR Code
