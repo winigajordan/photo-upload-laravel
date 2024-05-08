@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Demande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AdminController extends Controller
 {
     public function index()
     {
-        return view('admin.home');
+        $demandes = Demande::orderBy('created_at', 'desc')->get();
+        return view('admin.home', compact('demandes'));
     }
 
     public function createDemande(Request $request)
@@ -31,6 +33,9 @@ class AdminController extends Controller
             File::makeDirectory($directoryPath);
         }
 
+        $qrCode = QrCode::size(200)->generate(env('QR_BASE_URL').$slug."/image", '../public/'.$slug.'/code-qr.svg');;
+
+        checkStatus($etat);
 
         Demande::create(
            [
@@ -46,5 +51,14 @@ class AdminController extends Controller
 
         return redirect()->route('admin.home');
 
+    }
+
+    private function checkStatus(string $statut) : bool
+    {
+        if ($statut==''){
+            //Envoyer un mail contenant le QR Code
+            return true;
+        }
+        return false;
     }
 }
