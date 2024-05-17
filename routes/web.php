@@ -22,16 +22,7 @@ Route::get('/demande/{slug}',  [AdminController::class, 'showDemande'])->name('a
 Route::get('/demande/etat/{slug}/{etat}',  [AdminController::class, 'changeEtat'])->name('admin.demande.change.etat');
 
 
-Route::get('/images-bornes/{timestamp}/codes-qr.svg', function ($timestamp) {
-    // Répertoire où se trouve votre fichier SVG
-    $filePath = public_path('images-bornes/' . $timestamp . '/codes-qr.svg');
 
-    // Vérifie si le fichier existe
-    if (file_exists($filePath)) {
-        // Retourne le fichier SVG
-        return response()->file($filePath, ['Content-Type' => 'image/svg+xml']);
-    } else {
-        // Retourne une erreur 404 si le fichier n'existe pas
-        abort(404);
-    }
-});
+Route::post('/demande/{slug}/image',  [AdminController::class, 'uploadImage'])->name('admin.demande.upload.image');
+
+Route::get('/client/{slug}/image/download',  [AdminController::class, 'download'])->name('admin.demande.show.image');

@@ -3,14 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Demande;
+use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
+
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use ZipArchive;
 
 class AdminController extends Controller
 {
     public function index()
     {
+        //dd(phpinfo());
         $demandes = Demande::orderBy('created_at', 'desc')->get();
         return view('admin.home', compact('demandes'));
     }
@@ -82,4 +88,81 @@ class AdminController extends Controller
         }
         return false;
     }
+
+    public function uploadImage(Request $request, string $slug)
+    {
+        $image = $request->file('image');
+        $demande = Demande::where('slug', $slug)->first();
+
+        $imageExtension = $image->getClientOriginalExtension();
+        $imageName = uniqid().'.'.$imageExtension;
+
+        $image->move(public_path('/images-bornes/'.$slug), $imageName);
+
+
+        Image::create([
+            'nom' => $imageName,
+            'demande_id' => $demande->id
+        ]);
+
+        return response()->json(['message' => 'Succès'], 200);
+    }
+
+    public function download(string $slug)
+    {
+        $folder = public_path('/images-bornes/'.$slug);
+        $zipFile = public_path('/images-bornes/'.$slug.'/'.$slug.'.zip');
+
+        if (!File::exists($zipFile)) {
+            $this->zipFolder($folder, $zipFile);
+        }
+
+        return response()->download($zipFile);
+    }
+
+    function zipFolder($source, $destination): bool
+    {
+
+        $zip = new ZipArchive();
+        if (!$zip->open($destination, ZIPARCHIVE::CREATE | ZIPARCHIVE::OVERWRITE)) {
+            echo 'Impossible de créer ou d\'ouvrir le fichier zip.';
+            return false;
+        }
+
+        $source = realpath($source);
+        if (is_dir($source)) {
+            $files = new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator($source),
+                RecursiveIteratorIterator::LEAVES_ONLY
+            );
+
+            foreach ($files as $file) {
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = substr($filePath, strlen($source) + 1);
+
+                    if (!$zip->addFile($filePath, $relativePath)) {
+                        echo "Erreur lors de l'ajout du fichier: $filePath\n";
+                    }
+                }
+            }
+
+        } else if (is_file($source)) {
+            if (!$zip->addFile($source, basename($source))) {
+                echo "Erreur lors de l'ajout du fichier: $source\n";
+            }
+        } else {
+            echo 'Le chemin source n\'est ni un fichier ni un dossier valide.';
+            return false;
+        }
+
+        $result = $zip->close();
+        if (!$result) {
+            echo 'Erreur lors de la fermeture du fichier zip.';
+        }
+        return $result;
+    }
+
+
+
 }

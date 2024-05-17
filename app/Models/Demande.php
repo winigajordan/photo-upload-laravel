@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Demande extends Model
 {
+
+    use HasFactory;
     protected $fillable=[
       'nom',
         'prenom',
@@ -16,6 +18,10 @@ class Demande extends Model
         'etat',
         'slug'
     ];
-    use HasFactory;
+
+    public function images()
+    {
+        return $this->hasMany(Image::class);
+    }
 
 }

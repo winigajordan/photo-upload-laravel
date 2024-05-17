@@ -9,7 +9,7 @@
         rel="stylesheet"
     />
     <link rel="stylesheet" href="{{asset('admin/css/tailwind.output.css')}}" />
-
+    @yield('css')
     <script
         src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
         defer
