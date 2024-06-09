@@ -29,8 +29,9 @@ class AdminController extends Controller
         $telephone = $request->input('telephone');
         $date = $request->input('date');
         $etat = $request->input('etat');
-
+        $cmd = $request->input('cmd');
         $slug = uniqid();
+
 
         $directoryPath = public_path('/images-bornes/'.$slug);
 
@@ -55,7 +56,8 @@ class AdminController extends Controller
                'telephone'=>$telephone,
                'date_location'=>date('Y-m-d', strtotime($date)),
                'etat' => $etat,
-               'slug'=> $slug
+               'slug'=> $slug,
+               'commande' => $cmd
            ]
         );
 
@@ -66,6 +68,7 @@ class AdminController extends Controller
     public function changeEtat(string $slug, string $etat)
     {
         $demande = Demande::where('slug', $slug)->first();
+        dd($demande);
         $demande->etat = $etat;
         $demande->save();
 

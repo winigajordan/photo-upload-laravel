@@ -10,13 +10,14 @@ class Demande extends Model
 
     use HasFactory;
     protected $fillable=[
-      'nom',
+        'nom',
         'prenom',
         'email',
         'telephone',
         'date_location',
         'etat',
-        'slug'
+        'slug',
+        'commande'
     ];
 
     public function images()

@@ -22,7 +22,5 @@ Route::get('/demande/{slug}',  [AdminController::class, 'showDemande'])->name('a
 Route::get('/demande/etat/{slug}/{etat}',  [AdminController::class, 'changeEtat'])->name('admin.demande.change.etat');
 
 
-
 Route::post('/demande/{slug}/image',  [AdminController::class, 'uploadImage'])->name('admin.demande.upload.image');
-
 Route::get('/client/{slug}/image/download',  [AdminController::class, 'download'])->name('admin.demande.show.image');

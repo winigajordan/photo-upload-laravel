@@ -63,6 +63,7 @@
                         class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
                     >
                         <th class="px-4 py-3">Client</th>
+                        <th class="px-4 py-3">Numéro de commande </th>
                         <th class="px-4 py-3">Statut</th>
                         <th class="px-4 py-3">Changer le Statut</th>
                         <th class="px-4 py-3">Action</th>
@@ -99,11 +100,18 @@
                             </div>
                         </td>
                         <td class="px-4 py-3 text-xs">
-                        <span
-                            class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
-                        >
-                          {{$demande->etat}}
-                        </span>
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                            >
+                              {{$demande->commande}}
+                            </span>
+                        </td>
+                        <td class="px-4 py-3 text-xs">
+                            <span
+                                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                            >
+                              {{$demande->etat}}
+                            </span>
                         </td>
                         <td class="px-4 py-3 text-sm">
                             @if($demande->etat=="DEMANDE")
@@ -327,11 +335,17 @@
                 <div class="flex flex-wrap justify-center space-x-4 mb-8 ">
                     <div class="w-1/3">
                         <label class="block text-sm">
+                            <span class="text-gray-700 dark:text-gray-400">Numéro de commande </span>
+                            <input name="cmd" required type="number" min="100000" max="999999" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="123456">
+                        </label>
+                    </div>
+                    <div class="w-1/3">
+                        <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Date</span>
                             <input name="date" required type="date" class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" placeholder="Jane Doe">
                         </label>
                     </div>
-                    <div class="w-2/3">
+                    <div class="w-1/3">
                         <label class="block text-sm">
                             <span class="text-gray-700 dark:text-gray-400">Etat</span>
                             <select name="etat"
